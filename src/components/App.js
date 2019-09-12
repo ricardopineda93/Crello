@@ -11,7 +11,12 @@ function App(props) {
       <h1>Crello</h1>
       <div style={styles.listsContainer}>
         {lists.map(list => (
-          <TrelloList title={list.title} cards={list.cards} key={list.id} />
+          <TrelloList
+            title={list.title}
+            cards={list.cards}
+            key={list.id}
+            listId={list.id}
+          />
         ))}
         <TrelloActionButton list></TrelloActionButton>
       </div>
