@@ -6,38 +6,38 @@ let cardId = 11;
 const initialState = [
   {
     title: 'Last Episode',
-    id: 0,
+    id: `list-${0}`,
     cards: [
       {
-        id: 0,
+        id: `card-${0}`,
         text: 'We did something.'
       },
       {
-        id: 1,
+        id: `card-${1}`,
         text: 'We did something else.'
       }
     ]
   },
   {
     title: 'This Episode',
-    id: 1,
+    id: `list-${1}`,
     cards: [
       {
-        id: 2,
+        id: `card-${2}`,
         text: 'Making some good ground!'
       }
     ]
   },
   {
     title: 'Next Episode',
-    id: 2,
+    id: `list-${2}`,
     cards: [
       {
-        id: 3,
+        id: `card-${3}`,
         text: 'Translate to Bootstrap'
       },
       {
-        id: 4,
+        id: `card-${4}`,
         text: 'Make this work on current project.'
       }
     ]
@@ -47,13 +47,17 @@ const initialState = [
 const listsReducer = (state = initialState, action) => {
   switch (action.type) {
     case CONSTANTS.ADD_LIST:
-      const newList = { title: action.payload, cards: [], id: listId };
+      const newList = {
+        title: action.payload,
+        cards: [],
+        id: `list-${listId}`
+      };
       listId++;
       return [...state, newList];
     case CONSTANTS.ADD_CARD:
       const newCard = {
         text: action.payload.text,
-        id: cardId
+        id: `card-${cardId}`
       };
       cardId++;
       const newState = state.map(list => {
