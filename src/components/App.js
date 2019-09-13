@@ -2,7 +2,7 @@ import React from 'react';
 import TrelloList from './TrelloList';
 import { connect } from 'react-redux';
 import TrelloActionButton from './TrelloActionButton';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { sort } from '../actions';
 import styled from 'styled-components';
 
@@ -15,7 +15,7 @@ function App(props) {
   const { lists } = props;
 
   const onDragEnd = result => {
-    const { destination, source, draggableId } = result;
+    const { destination, source, draggableId, type } = result;
 
     if (!destination) {
       return;
@@ -27,7 +27,8 @@ function App(props) {
         destination.droppableId,
         source.index,
         destination.index,
-        draggableId
+        draggableId,
+        type
       )
     );
   };
@@ -36,17 +37,26 @@ function App(props) {
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="App">
         <h1>Crello</h1>
-        <ListsContainer>
-          {lists.map(list => (
-            <TrelloList
-              title={list.title}
-              cards={list.cards}
-              key={list.id}
-              listId={list.id}
-            />
-          ))}
-          <TrelloActionButton list></TrelloActionButton>
-        </ListsContainer>
+        <Droppable droppableId="all-lists" direction="horizontal" type="list">
+          {provided => (
+            <ListsContainer
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {lists.map((list, index) => (
+                <TrelloList
+                  title={list.title}
+                  cards={list.cards}
+                  key={list.id}
+                  listId={list.id}
+                  index={index}
+                />
+              ))}
+              {provided.placeholder}
+              <TrelloActionButton list></TrelloActionButton>
+            </ListsContainer>
+          )}
+        </Droppable>
       </div>
     </DragDropContext>
   );
