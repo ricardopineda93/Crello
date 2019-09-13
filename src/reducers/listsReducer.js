@@ -54,7 +54,9 @@ const listsReducer = (state = initialState, action) => {
       };
       listId++;
       return [...state, newList];
-    case CONSTANTS.ADD_CARD:
+
+    // Wrapping in squiggly brackets to work around the newState kwrd conflict
+    case CONSTANTS.ADD_CARD: {
       const newCard = {
         text: action.payload.text,
         id: `card-${cardId}`
@@ -65,6 +67,26 @@ const listsReducer = (state = initialState, action) => {
           return { ...list, cards: [...list.cards, newCard] };
         } else return list;
       });
+      return newState;
+    }
+    case CONSTANTS.DRAG_HAPPENED:
+      const {
+        droppableIdStart,
+        droppableIdEnd,
+        droppableIndexStart,
+        droppableIndexEnd,
+        draggableId
+      } = action.payload;
+
+      const newState = [...state];
+
+      // Handling case if in same list...
+      if (droppableIdStart === droppableIdEnd) {
+        const list = state.find(list => droppableIdStart === list.id);
+        const card = list.cards.splice(droppableIndexStart, 1);
+        list.cards.splice(droppableIndexEnd, 0, ...card);
+      }
+
       return newState;
     default:
       return state;
